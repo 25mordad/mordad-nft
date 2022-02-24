@@ -194,28 +194,28 @@ function App(props) {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
+  const balance = useContractReader(readContracts, "Mordad25Collectible", "balanceOf", [address]);
   console.log("🤗 balance:", balance);
 
   // 📟 Listen for broadcast events
-  const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
+  const transferEvents = useEventListener(readContracts, "Mordad25Collectible", "Transfer", localProvider, 1);
   console.log("📟 Transfer events:", transferEvents);
 
   //
-  // 🧠 This effect will update yourCollectibles by polling when your balance changes
+  // 🧠 This effect will update Mordad25Collectibles by polling when your balance changes
   //
   const yourBalance = balance && balance.toNumber && balance.toNumber();
-  const [yourCollectibles, setYourCollectibles] = useState();
+  const [Mordad25Collectibles, setMordad25Collectibles] = useState();
 
   useEffect(() => {
-    const updateYourCollectibles = async () => {
+    const updateMordad25Collectibles = async () => {
       const collectibleUpdate = [];
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
           console.log("Getting token index", tokenIndex);
-          const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex);
+          const tokenId = await readContracts.Mordad25Collectible.tokenOfOwnerByIndex(address, tokenIndex);
           console.log("tokenId", tokenId);
-          const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId);
+          const tokenURI = await readContracts.Mordad25Collectible.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
 
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
@@ -234,9 +234,9 @@ function App(props) {
           console.log(e);
         }
       }
-      setYourCollectibles(collectibleUpdate);
+      setMordad25Collectibles(collectibleUpdate);
     };
-    updateYourCollectibles();
+    updateMordad25Collectibles();
   }, [address, yourBalance]);
 
   /*
@@ -434,7 +434,7 @@ function App(props) {
               }}
               to="/"
             >
-              YourCollectibles
+              Mordad25Collectibles
             </Link>
           </Menu.Item>
           <Menu.Item key="/transfers">
@@ -489,7 +489,7 @@ function App(props) {
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
                 bordered
-                dataSource={yourCollectibles}
+                dataSource={Mordad25Collectibles}
                 renderItem={item => {
                   const id = item.id.toNumber();
                   return (
@@ -528,7 +528,7 @@ function App(props) {
                         <Button
                           onClick={() => {
                             console.log("writeContracts", writeContracts);
-                            tx(writeContracts.YourCollectible.transferFrom(address, transferToAddresses[id], id));
+                            tx(writeContracts.Mordad25Collectible.transferFrom(address, transferToAddresses[id], id));
                           }}
                         >
                           Transfer
@@ -635,7 +635,7 @@ function App(props) {
           </Route>
           <Route path="/debugcontracts">
             <Contract
-              name="YourCollectible"
+              name="Mordad25Collectible"
               signer={userSigner}
               provider={localProvider}
               address={address}
